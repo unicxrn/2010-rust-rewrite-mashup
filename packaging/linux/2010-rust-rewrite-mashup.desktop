@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=2010 Rust Rewrite Mashup
+Comment=MW2, Skate 3 and Minecraft in one Rust game
+Exec=mashup-launcher
+Icon=2010-rust-rewrite-mashup
+Terminal=false
+Categories=Game;ActionGame;
+StartupWMClass=2010-rust-rewrite-mashup

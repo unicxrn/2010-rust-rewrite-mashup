@@ -37,9 +37,12 @@ GNU FreeFont (crates/console/assets/FreeMono.otf)
 Third-party source code
 --------------------------------------------------------------------------------
 
-No third-party source code is vendored in this repository, and the build links
-no third-party project named below. IW4L's own dependencies are the crates
-declared in Cargo.toml, under their own licences.
+No third-party source code is vendored in this repository. The IW4L and
+mashup-launcher binaries link the crates declared in Cargo.toml, each under its
+own licence, and none of the projects listed under "References consulted
+during development". Besides the two fonts above, mashup-launcher embeds the
+four egui fonts listed under "Linux AppImage" below, and the AppImage bundles
+three separate prebuilt tools next to the binaries.
 
 The fork carries two projects of its own author's in-tree, built as part of
 the workspace:
@@ -52,6 +55,53 @@ third_party/minecraftoss/ — five crates of MinecraftOSS, a Rust Minecraft
   tables are gameplay values measured from Minecraft (food, waxing and
   dispenser rules). No Minecraft code, JARs, textures or sounds are included:
   the game downloads Minecraft's files from Mojang on first run.
+
+--------------------------------------------------------------------------------
+Linux AppImage
+--------------------------------------------------------------------------------
+
+The Linux AppImage release (packaging/linux/build-appimage.sh) carries the
+following on top of the iw4l binary and the fonts above. Licence texts are
+installed under usr/share/doc/2010-rust-rewrite-mashup/ inside the AppImage.
+
+egui fonts, embedded in mashup-launcher by eframe's default_fonts feature
+  (the epaint_default_fonts crate). Texts in licenses/egui-fonts/.
+  Hack: Copyright 2018 Source Foundry Authors, MIT License, with Bitstream
+    Vera portions under the Bitstream Vera License.
+    https://github.com/source-foundry/Hack
+  Ubuntu Light: Ubuntu Font Licence 1.0. https://design.ubuntu.com/font
+  Noto Emoji: SIL Open Font License 1.1.
+    https://fonts.google.com/noto/specimen/Noto+Emoji
+  emoji-icon-font: Copyright 2014 John Slegers, MIT License.
+    https://github.com/jslegers/emoji-icon-font
+
+extract-xiso: https://github.com/XboxDev/extract-xiso
+  Used to extract Xbox 360 .iso images. A modified BSD licence, which requires
+  reproducing its notice with the binary; the full text is installed at
+  usr/share/doc/2010-rust-rewrite-mashup/extract-xiso-LICENSE.txt inside the
+  AppImage.
+
+skate-convert: a PyInstaller build of the Skate 3 data converter
+  (skate/converter/iw4l_skate_convert.py) against
+  https://github.com/SK8-ENGINE/skate-3-rust-engine, rev cb79689. The
+  PyInstaller bundle embeds a CPython interpreter, NumPy and Pillow, plus the
+  skate engine's own tools/ directory and its third-party notices and vendored
+  licences (utt, skate3_ui, university and FBX2glTF). Licence texts for all of
+  these are installed under
+  usr/share/doc/2010-rust-rewrite-mashup/licenses/ inside the AppImage.
+  readline, curses and OpenSSL (ssl/_ssl/_hashlib) are excluded from this
+  bundle: the converter only reads local files, so they're unused weight
+  (and readline is GPL-3.0, which would otherwise need its own accounting).
+  What PyInstaller still pulls in by scanning the interpreter's actual link
+  dependencies (libb2, bzip2, expat, libffi, xz (liblzma), mpdecimal,
+  util-linux's libuuid and zlib) are plain host system libraries,
+  not part of any of the above projects; their licence texts, copied from
+  this build host's own package database, are installed under
+  usr/share/doc/2010-rust-rewrite-mashup/licenses/system-libs/ inside the
+  AppImage.
+
+appimagetool: https://github.com/AppImage/appimagetool
+  Used only to build the AppImage; it is not itself redistributed.
 
 --------------------------------------------------------------------------------
 References consulted during development

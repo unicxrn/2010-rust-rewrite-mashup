@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.chasmlol.RustRewriteMashup</id>
+  <name>2010 Rust Rewrite Mashup</name>
+  <summary>MW2, Skate 3 and Minecraft in one Rust game</summary>
+  <developer id="io.github.chasmlol">
+    <name>chasmlol</name>
+  </developer>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>Apache-2.0</project_license>
+  <description>
+    <p>
+      2010 Rust Rewrite Mashup is a from-scratch Rust reimplementation of
+      Call of Duty: Modern Warfare 2's multiplayer engine that also loads
+      Skate 3 and Minecraft content. It needs the player's own copy of
+      Modern Warfare 2 from Steam to run; a Skate 3 Xbox 360 copy is
+      optional and only unlocks skating. Minecraft's own game files are
+      downloaded from Mojang the first time the Minecraft world is opened.
+    </p>
+    <p>
+      This is an unofficial fan project and is not affiliated with or
+      endorsed by Activision, Electronic Arts or Mojang.
+    </p>
+  </description>
+  <launchable type="desktop-id">2010-rust-rewrite-mashup.desktop</launchable>
+  <url type="homepage">https://github.com/chasmlol/2010-rust-rewrite-mashup</url>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-realistic">intense</content_attribute>
+  </content_rating>
+  <categories>
+    <category>Game</category>
+    <category>ActionGame</category>
+  </categories>
+  <provides>
+    <binary>mashup-launcher</binary>
+  </provides>
+</component>
