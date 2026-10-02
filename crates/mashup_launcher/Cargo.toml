@@ -1,0 +1,28 @@
+[package]
+name = "mashup_launcher"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+description = "Linux launcher window for 2010 Rust Rewrite Mashup."
+
+[[bin]]
+name = "mashup-launcher"
+path = "src/main.rs"
+
+[dependencies]
+asset_audio.workspace = true
+asset_material.workspace = true
+eframe = { version = "0.36", default-features = false, features = ["glow", "x11", "wayland", "default_fonts"] }
+rfd = { version = "0.15", default-features = false, features = ["xdg-portal", "async-std"] }
+pollster = "0.4"
+gilrs = "0.11"
+png.workspace = true
+zip.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+# Same rodio bevy links, output only; MP3 decoding is done with symphonia.
+rodio = { version = "=0.22.2", default-features = false, features = ["playback"] }
+symphonia = { version = "0.5", default-features = false, features = ["mp3"] }
+
+[lints]
+workspace = true

@@ -48,6 +48,7 @@ members = [
     "crates/marks_iw4",
     "crates/master_protocol",
     "crates/math_iw4",
+    "crates/mashup_launcher",
     "crates/movement_iw4",
     "crates/net",
     "crates/iw4l-master",
