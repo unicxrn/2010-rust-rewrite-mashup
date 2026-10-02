@@ -1417,6 +1417,12 @@ pub struct ZoneStream<'a> {
     vehicle_compass: ([[u8; 128]; 2], [i32; 2]),
     latest_material: Option<MaterialGeometry>,
     latest_image: Option<GfxImageGeometry>,
+    lightmap_images: [Option<GfxImageGeometry>; 2 * MAX_LIGHTMAP_PAGES],
+    lightmap_image_count: usize,
+    /// Offset pointers to a loaded image name the slot it was loaded through
+    /// (or its insert slot), never the body: bodies sit in reused temp memory.
+    lightmap_slot_keys: [[Option<Ptr>; 2]; 2 * MAX_LIGHTMAP_PAGES],
+    lightmap_just_recorded: Option<usize>,
     latest_technique_set: Option<TechniqueSetGeometry>,
 
     technique_graph: TechniqueGraphGeometry,
@@ -1521,6 +1527,10 @@ impl<'a> ZoneStream<'a> {
             vehicle_compass: ([[0; 128]; 2], [0; 2]),
             latest_material: None,
             latest_image: None,
+            lightmap_images: [None; 2 * MAX_LIGHTMAP_PAGES],
+            lightmap_image_count: 0,
+            lightmap_slot_keys: [[None; 2]; 2 * MAX_LIGHTMAP_PAGES],
+            lightmap_just_recorded: None,
             latest_technique_set: None,
             technique_graph: TechniqueGraphGeometry::default(),
             technique_graph_seen: false,
@@ -2213,12 +2223,36 @@ impl<'a> ZoneStream<'a> {
     }
 
     pub(crate) fn record_image(&mut self, image: GfxImageGeometry) {
+        let is_lightmap = image
+            .name
+            .and_then(|name| self.cstr(name).ok())
+            .is_some_and(|name| name.starts_with("*lightmap"));
+        self.lightmap_just_recorded = None;
+        let i = self.lightmap_image_count;
+        if is_lightmap && i < self.lightmap_images.len() {
+            self.lightmap_images[i] = Some(image);
+            self.lightmap_just_recorded = Some(i);
+            self.lightmap_image_count += 1;
+        }
         self.latest_image = Some(image);
         self.image_serial = self.image_serial.wrapping_add(1);
     }
 
     pub fn latest_image(&self) -> Option<GfxImageGeometry> {
         self.latest_image
+    }
+
+    pub(crate) fn image_by_offset(&self, target: Ptr) -> Option<GfxImageGeometry> {
+        self.lightmap_images
+            .iter()
+            .zip(&self.lightmap_slot_keys)
+            .find_map(|(image, keys)| keys.contains(&Some(target)).then_some(*image).flatten())
+    }
+
+    pub(crate) fn key_loaded_image(&mut self, slot: Ptr, insert_slot: Option<Ptr>) {
+        if let Some(i) = self.lightmap_just_recorded.take() {
+            self.lightmap_slot_keys[i] = [Some(slot), insert_slot];
+        }
     }
 
     pub(crate) fn image_serial(&self) -> u64 {

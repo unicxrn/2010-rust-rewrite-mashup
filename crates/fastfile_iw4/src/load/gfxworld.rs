@@ -346,20 +346,8 @@ fn load_gfxworld_draw(
         let retain = lightmap_count.min(MAX_LIGHTMAP_PAGES);
         for i in 0..lightmap_count {
             let lightmap = a.at(i * s.layout(sz::GFX_LIGHTMAP_ARRAY, 16));
-            let serial = s.image_serial();
-            asset_ptr_at(s, links, AssetType::Image, lightmap.at(0))?;
-            let primary = if s.image_serial() != serial {
-                s.latest_image()
-            } else {
-                None
-            };
-            let serial = s.image_serial();
-            asset_ptr_at(s, links, AssetType::Image, lightmap.at(s.layout(4, 8)))?;
-            let secondary = if s.image_serial() != serial {
-                s.latest_image()
-            } else {
-                None
-            };
+            let primary = lightmap_image(s, links, lightmap.at(0))?;
+            let secondary = lightmap_image(s, links, lightmap.at(s.layout(4, 8)))?;
             if i < retain {
                 lightmaps[i] = GfxLightmapPair { primary, secondary };
             }
@@ -625,4 +613,22 @@ fn runtime_array(
         s.pop()?;
     }
     Ok(())
+}
+
+/// A lightmap image loaded inline here, or one an earlier asset already
+/// loaded that this slot only points back to (rebuilt zones do this).
+fn lightmap_image(
+    s: &mut ZoneStream<'_>,
+    links: &mut dyn AssetLinkSink,
+    slot: Ptr,
+) -> Result<Option<crate::zone::GfxImageGeometry>> {
+    let serial = s.image_serial();
+    asset_ptr_at(s, links, AssetType::Image, slot)?;
+    if s.image_serial() != serial {
+        return Ok(s.latest_image());
+    }
+    Ok(match s.ptr_at(slot, 0)? {
+        ZonePtr::Offset(target) => s.image_by_offset(target),
+        _ => None,
+    })
 }
