@@ -32,6 +32,8 @@ You don't need Minecraft installed. The first time the game starts, it downloads
 
 ## How to play
 
+On Linux, use the AppImage instead (see [Linux](#linux) below).
+
 1. Grab the zip from [Releases](../../releases/latest) and extract it somewhere you can write to (not Program Files), or build it yourself (see [docs/BUILD.md](docs/BUILD.md)).
 2. Double-click `iw4l.exe` and confirm your MW2 folder. It then asks whether you have Skate 3: choose **Yes** and select your `default.xex`, or **No** to play without skating.
 3. To play the Minecraft world, go to **Create Game** and pick the **Minecraft** tab in the map list. The map is called **overworld**.
@@ -52,6 +54,23 @@ You don't need Minecraft installed. The first time the game starts, it downloads
 | J | Click both sticks in | Skate 3 mode |
 
 More about skating in [docs/SKATE.md](docs/SKATE.md).
+
+## Linux
+
+Linux gets a native build with its own launcher. Download `2010-Rust-Rewrite-Mashup-x86_64.AppImage` from [Releases](../../releases/latest), make it executable (`chmod +x`, or tick "Allow executing" in your file manager's Properties) and open it. You don't need to install anything else.
+
+The launcher handles the setup that the Windows build does with dialogs:
+
+- It looks for MW2 in your Steam libraries, including Flatpak Steam and libraries on other drives. If it can't find it, **Options** lets you pick the folder or install MW2 through Steam.
+- **Set up Skate 3** takes your Skate 3 `.iso` or an extracted `default.xex`. Extracting and converting takes a couple of minutes and needs about 7.5 GB of free space while it runs.
+- **Quick Play** starts one of your maps with the game mode you pick, up to 20 bots, and optionally drops you onto a skateboard when you spawn.
+- The menu plays MW2's menu music and click sounds from your own copy of the game. **M** mutes them.
+
+The launcher keeps everything it writes in `~/.local/share/2010-rust-rewrite-mashup`. **Reset** in **Options** forgets your MW2 folder and deletes the converted Skate 3 data, but keeps the Minecraft download. **Remove everything**, on the same screen, deletes the whole folder and the app menu entry.
+
+You need an x86_64 PC with a Vulkan driver and glibc 2.44 or newer. In practice that means a 2026 distro: older ones like Ubuntu 24.04 won't start it yet. Skate 3 setup unpacks a helper program into `/tmp`, so if your `/tmp` is mounted `noexec`, start the launcher with `TMPDIR` pointing at another folder.
+
+To build the AppImage yourself, install the dependencies in [docs/BUILD.md](docs/BUILD.md) and run `packaging/linux/build-appimage.sh`. The result lands in `dist/`.
 
 ## Controller
 

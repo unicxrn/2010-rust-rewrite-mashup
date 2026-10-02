@@ -41,3 +41,17 @@ Game data: the Windows depot of a Steam copy, `steamcmd
 Then follow `README.md` (Build and run): copy `.env.example`, set
 `IW4L_GAMES`, `make map mp_boneyard`. Portable Windows is
 [`WINDOWS.md`](WINDOWS.md).
+
+## Linux AppImage
+
+`packaging/linux/build-appimage.sh` builds the game, the launcher
+(`crates/mashup_launcher`), the Skate 3 converter and `extract-xiso`, and packs
+them into `dist/2010-Rust-Rewrite-Mashup-x86_64.AppImage`. On top of the
+packages above it needs `cmake`, `git`, `curl` and Python 3.11, 3.12 or 3.13
+with `venv` (the converter's pinned NumPy and PyInstaller don't support newer
+Pythons yet). The script downloads `appimagetool` and the converter sources at
+pinned versions on its first run.
+
+The release build uses fat LTO, so expect the link step alone to take ten
+minutes or more. The AppImage needs at least the glibc of the machine that
+built it.
